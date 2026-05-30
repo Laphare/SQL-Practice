@@ -1,0 +1,21 @@
+*APPROACH 1
+SELECT s.name
+FROM SalesPerson s
+WHERE NOT EXISTS (
+    SELECT *
+    FROM Orders o
+    JOIN Company c ON o.com_id = c.com_id
+    WHERE c.name = 'RED' AND o.sales_id = s.sales_id
+);
+
+*APPROACH 2
+# Write your MySQL query statement below
+SELECT s.name 
+FROM SalesPerson s
+WHERE sales_id NOT IN (
+    SELECT sales_id
+    FROM Orders o
+    WHERE o.com_id=
+        (SELECT com_id
+        FROM Company c
+        WHERE c.name = 'RED' AND c.name IS NOT NULL))
