@@ -1,0 +1,7 @@
+WITH orders1 AS (SELECT customer_number,
+    RANK() OVER(ORDER BY COUNT(*) DESC) as rn
+    FROM Orders
+    GROUP BY customer_number)
+SELECT customer_number
+FROM orders1
+WHERE rn= 1
