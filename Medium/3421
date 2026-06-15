@@ -1,0 +1,26 @@
+# APPROACH 1
+WITH rn_date AS (SELECT student_id,subject,
+FIRST_VALUE(score)OVER(PARTITION BY student_id,subject ORDER BY exam_date ASC) AS first_score,
+FIRST_VALUE(score)OVER(PARTITION BY student_id,subject ORDER BY exam_date DESC) AS latest_score
+FROM Scores)
+SELECT distinct *
+FROM rn_date
+WHERE latest_score > first_score
+ORDER BY student_id,subject
+
+# APPROACH 2
+
+WITH rn_list AS (SELECT student_id,subject,score,
+row_number()OVER(PARTITION BY student_id,subject ORDER BY exam_date ASC) AS rn_first,
+row_number()OVER(PARTITION BY student_id,subject ORDER BY exam_date DESC) AS la_first
+FROM Scores)
+SELECT rn1.student_id,rn1.subject,
+rn1.score AS first_score,
+rn2.score AS latest_score
+FROM rn_list rn1
+INNER JOIN rn_list rn2
+ON rn1.student_id=rn2.student_id AND rn1.subject=rn2.subject
+WHERE rn2.score > rn1.score
+AND rn2.la_first=1
+AND rn1.rn_first=1
+ORDER BY rn1.student_id,rn1.subject
