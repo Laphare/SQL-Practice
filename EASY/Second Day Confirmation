@@ -1,0 +1,10 @@
+WITH
+confirmed_list AS (SELECT email_id,signup_action,MIN(action_date) AS action_date
+FROM texts
+WHERE signup_action = 'Confirmed'
+GROUP BY email_id,signup_action)
+SELECT e.user_id
+FROM emails e 
+INNER JOIN confirmed_list c 
+ON e.email_id=c.email_id
+WHERE c.action_date::date - e.signup_date::date = 1
