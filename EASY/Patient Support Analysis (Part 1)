@@ -1,0 +1,7 @@
+WITH calls_over_e AS (SELECT 
+COUNT(*) AS policy_holder_over_3
+FROM callers
+GROUP BY policy_holder_id
+HAVING COUNT(*) >=3)
+SELECT COUNT(*) AS policy_holder_count
+FROM calls_over_e
