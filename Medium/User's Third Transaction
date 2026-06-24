@@ -4,4 +4,4 @@ FROM transactions
 )
 SELECT user_id, spend,transaction_date
 FROM rn_list 
-WHERE rn = 3
+WHERE rn = 3;
