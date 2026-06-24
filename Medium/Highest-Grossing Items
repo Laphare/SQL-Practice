@@ -1,0 +1,16 @@
+WITH t_spend AS(
+SELECT category,product,
+SUM(spend) AS total_spend
+FROM product_spend
+WHERE transaction_date <= '2022/12/31 23:59:59'
+AND transaction_date >= '2022/1/1 00:00:00'
+GROUP BY category,product
+),
+rn_list AS (
+SELECT *, ROW_NUMBER() OVER(PARTITION BY category ORDER BY total_spend DESC) AS rn 
+FROM t_spend
+)
+
+SELECT category,product,total_spend
+FROM rn_list
+WHERE rn<= 2
