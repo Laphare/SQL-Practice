@@ -1,0 +1,13 @@
+WITH
+rn_list AS(
+SELECT *,
+ROW_NUMBER()OVER(PARTITION BY measurement_time::DATE ORDER BY measurement_time) AS rn
+FROM measurements
+)
+SELECT
+measurement_time::DATE AS measurement_day,
+SUM(CASE WHEN rn  %2 = 1 THEN measurement_value END) AS odd_sum,
+SUM(CASE WHEN rn %2 = 0 THEN measurement_value END) AS even_sum
+FROM rn_list
+GROUP BY measurement_time::DATE 
+ORDER BY measurement_time::DATE 
