@@ -1,0 +1,16 @@
+WITH
+rn_listed AS (SELECT ticker,
+TO_CHAR(date, 'Mon-YYYY') AS month_year,
+open,
+ROW_NUMBER()OVER(PARTITION BY ticker ORDER BY open DESC) AS highest_open_rn,
+ROW_NUMBER()OVER(PARTITION BY ticker ORDER BY open ASC) AS lowest_open_rn
+FROM stock_prices)
+
+SELECT ticker,
+MAX(CASE WHEN highest_open_rn = 1 THEN month_year END ) AS highest_mth,
+MAX(CASE WHEN highest_open_rn = 1 THEN open END) AS highest_open,
+MAX(CASE WHEN lowest_open_rn = 1 THEN month_year END ) AS lowest_mth,
+MAX(CASE WHEN lowest_open_rn = 1 THEN open END) AS lowest_open
+FROM rn_listed
+GROUP BY ticker
+ORDER BY ticker
