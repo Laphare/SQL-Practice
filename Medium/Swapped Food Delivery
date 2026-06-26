@@ -1,0 +1,35 @@
+-- APPROACH 1
+
+SELECT (order_id+1) AS order_id,
+item
+FROM orders
+WHERE order_id %2 = 1 
+AND order_id <> (SELECT MAX(order_id) FROM orders)
+
+UNION
+
+SELECT order_id,
+item
+FROM orders
+WHERE order_id %2 = 1 
+AND order_id = (SELECT MAX(order_id) FROM orders)
+
+UNION
+
+SELECT (order_id-1) AS order_id,
+item
+FROM orders
+WHERE order_id %2 = 0 
+
+ORDER BY order_id
+
+-- APPROACH 2
+
+SELECT 
+( CASE 
+      WHEN order_id %2 =0 THEN order_id-1
+      ELSE COALESCE(LEAD(order_id) OVER(ORDER BY order_id),order_id) END 
+) AS order_id,
+item
+FROM orders
+ORDER BY order_id
