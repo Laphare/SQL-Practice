@@ -1,0 +1,11 @@
+WITH
+rn_list AS (
+SELECT card_name,issued_amount,
+ROW_NUMBER()OVER(PARTITION BY card_name ORDER BY issue_year , issue_month ) AS rn
+FROM monthly_cards_issued
+)
+
+SELECT card_name,issued_amount
+FROM rn_list
+WHERE rn = 1
+ORDER BY issued_amount DESC
