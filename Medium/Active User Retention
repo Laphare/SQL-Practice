@@ -1,0 +1,15 @@
+SELECT EXTRACT(MONTH FROM event_date) AS month,
+COUNT(DISTINCT user_id) AS monthly_active_users
+FROM user_actions
+WHERE 
+
+event_date < '2022/08/01 00:00:00'
+AND event_date >= '2022/07/01 00:00:00'
+
+AND user_id IN (
+SELECT user_id
+FROM user_actions
+WHERE event_date < '2022/07/01 00:00:00'
+AND event_date >= '2022/06/01 00:00:00'
+)
+GROUP BY EXTRACT(MONTH FROM event_date)
