@@ -1,0 +1,18 @@
+WITH list_info AS (
+SELECT
+       SUM (CASE WHEN item_type = 'prime_eligible' THEN square_footage END) AS prime_square,
+       SUM (CASE WHEN item_type = 'not_prime' THEN square_footage END) AS not_prime_square,
+       SUM(CASE WHEN item_type = 'prime_eligible' THEN 1 END) AS prime_count,
+       SUM(CASE WHEN item_type = 'not_prime' THEN 1 END) AS not_prime_count
+    FROM inventory
+)
+
+SELECT 'prime_eligible' AS item_type, 
+FLOOR(500000.0/prime_square)*prime_count AS item_count
+FROM list_info
+
+UNION ALL 
+
+SELECT 'not_prime' AS item_type, 
+FLOOR((500000.0 - FLOOR(500000.0/prime_square)*prime_square)/not_prime_square)*not_prime_count AS item_count
+FROM list_info
