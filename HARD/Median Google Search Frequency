@@ -1,0 +1,13 @@
+WITH base_list AS (SELECT 
+*,
+sum(num_users)OVER(ORDER BY searches) AS count_list,
+sum(num_users) OVER() AS total_count
+FROM search_frequency)
+
+SELECT
+ROUND(AVG(searches),1) AS median 
+FROM base_list
+WHERE 
+count_list >= total_count/2
+AND
+count_list - num_users +1 <= total_count/2+1
