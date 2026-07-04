@@ -1,0 +1,13 @@
+select COALESCE(a.user_id, d.user_id) AS user_id,
+CASE
+  WHEN a.status IS NULL AND d.paid IS NOT NULL THEN 'NEW'
+  WHEN a.status IS NOT NULL AND a.status = 'CHURN' AND d.paid IS NOT NULL THEN 'RESURRECT'
+  WHEN a.status IS NOT NULL AND a.status <> 'CHURN' AND d.paid IS NOT NULL THEN 'EXISTING'
+  WHEN a.status IS NOT NULL AND d.paid IS NULL THEN 'CHURN' END 
+AS new_status
+  
+  
+FROM advertiser a 
+FULL OUTER JOIN daily_pay d 
+ON a.user_id = d.user_id
+order by user_id
