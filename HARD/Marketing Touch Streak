@@ -1,0 +1,19 @@
+WITH rn_list AS (SELECT contact_id, 
+DATE_TRUNC('week', event_date) AS week,
+ROW_NUMBER()OVER(PARTITION BY contact_id ORDER BY event_date) AS rn
+FROM marketing_touches),
+
+group_list AS (
+SELECT contact_id, (week - (rn*interval'7 days')) AS index_list
+FROM rn_list
+),
+
+id_list AS (SELECT contact_id
+FROM group_list
+GROUP BY contact_id,index_list
+HAVING COUNT(*) >=3)
+
+SELECT c.email
+FROM id_list i 
+INNER JOIN crm_contacts c 
+ON c.contact_id = i.contact_id
