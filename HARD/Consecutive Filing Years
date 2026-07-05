@@ -1,0 +1,18 @@
+WITH rn_list AS (SELECT user_id,
+EXTRACT(YEAR FROM filing_date) AS year ,product,
+ROW_NUMBER()OVER(
+PARTITION BY user_id, 
+SPLIT_PART(product, ' ', 1)  
+ORDER BY filing_date) AS rn
+FROM filed_taxes),
+
+group_list AS (SELECT user_id, (year - rn) AS index_list
+FROM rn_list
+)
+
+SELECT DISTINCT user_id
+FROM group_list
+GROUP BY user_id,index_list
+HAVING COUNT(*) >=3
+
+ORDER BY user_id 
