@@ -1,0 +1,7 @@
+With lag_list AS (SELECT policy_holder_id,call_date,
+lag(call_date)OVER(partition by policy_holder_id ORDER BY call_date) AS pre_day
+FROM callers)
+SELECT 
+COUNT(DISTINCT policy_holder_id)
+FROM lag_list
+WHERE call_date - pre_day <= INTERVAL '7 days'
