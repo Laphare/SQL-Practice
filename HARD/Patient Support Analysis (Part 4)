@@ -1,0 +1,22 @@
+WITH
+claer_date AS (SELECT 
+DATE_TRUNC('month',call_date) AS year_month,
+COUNT(*) AS monthly_call
+FROM callers
+WHERE call_duration_secs > '300'
+GROUP BY 1
+),
+
+lag_data AS (SELECT *,
+LAG(year_month) OVER (ORDER BY year_month) AS pre_date,
+LAG(monthly_call) OVER (ORDER BY year_month) AS pre_monthly_call
+FROM claer_date)
+
+
+SELECT 
+EXTRACT(YEAR FROM year_month) AS yr,
+EXTRACT(MONTH FROM year_month) AS mth,
+ROUND((monthly_call-pre_monthly_call)*100.0/pre_monthly_call,1) AS long_calls_growth_pct
+FROM lag_data
+WHERE AGE(year_month,pre_date) = INTERVAL '1 month' OR 
+AGE(year_month,pre_date) IS NULL
