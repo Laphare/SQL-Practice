@@ -1,0 +1,38 @@
+WITH
+senior_manage AS (
+SELECT DISTINCT manager_id
+FROM employees
+WHERE emp_id IN (SELECT DISTINCT manager_id FROM employees WHERE manager_id IS NOT NULL)
+AND manager_id IS NOT NULL ),
+
+too_senior_manage AS (
+SELECT DISTINCT manager_id
+FROM employees
+WHERE emp_id IN (SELECT DISTINCT manager_id FROM senior_manage WHERE manager_id IS NOT NULL)
+AND manager_id IS NOT NULL)
+
+SELECT manager_name, COUNT (*) AS direct_reportees
+FROM employees
+WHERE manager_id IN (SELECT manager_id FROM senior_manage)
+AND manager_id NOT IN (SELECT manager_id FROM too_senior_manage)
+GROUP BY manager_name
+
+ORDER BY direct_reportees DESC
+
+/*
+The offical answer is :
+SELECT
+    managers.manager_name,
+    COUNT(DISTINCT managers.emp_id) AS direct_reportees
+FROM employees
+JOIN employees AS managers
+    ON employees.manager_id = managers.emp_id
+JOIN employees AS senior_managers
+    ON managers.manager_id = senior_managers.emp_id
+GROUP BY managers.manager_name
+ORDER BY direct_reportees DESC;
+
+NOTE: The official solution has a logical flaw. The double JOIN incorrectly 
+-- excludes regular employees who report directly to a senior manager, 
+-- counting only sub-managers instead.
+*/
