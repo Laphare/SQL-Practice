@@ -1,0 +1,9 @@
+WITH lag_list AS (SELECT merchant_id, credit_card_id,amount,transaction_timestamp,
+lAG(transaction_timestamp)OVER(PARTITION BY merchant_id,credit_card_id,amount ORDER BY transaction_timestamp) AS pre_paid
+FROM transactions
+)
+
+SELECT 
+COUNT(*)
+FROM lag_list
+WHERE transaction_timestamp-pre_paid  <= INTERVAL ' 10 MINUTE'
