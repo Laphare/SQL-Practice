@@ -1,0 +1,23 @@
+WITH grouped_list AS (select 
+EXTRACT(MONTH FROM invoicedate) AS month,
+description,
+quantity * unitprice AS total_paid
+from online_retail
+WHERE quantity > 0),
+
+total_sale AS (
+SELECT month, description,SUM(total_paid) AS total_paid
+FROM grouped_list
+GROUP BY month, description
+),
+
+
+rn_list AS (
+SELECT *,
+ROW_NUMBER()OVER(PARTITION BY month ORDER BY total_paid DESC) AS rn
+FROM total_sale
+)
+
+SELECT month,description,total_paid
+FROM rn_list
+WHERE rn = 1
