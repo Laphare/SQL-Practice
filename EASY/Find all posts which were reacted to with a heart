@@ -1,0 +1,10 @@
+WITH heart_list AS(
+SELECT *
+FROM facebook_reactions
+WHERE reaction = 'heart')
+
+
+SELECT DISTINCT h.post_id,h.poster,f.post_text,f.post_keywords,f.post_date
+FROM heart_list h
+INNER JOIN facebook_posts f
+ON h.post_id= f.post_id
