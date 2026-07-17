@@ -1,0 +1,33 @@
+WITH
+clear_list AS (SELECT user_id , EXTRACT ( MONTH FROM created_at) AS month , number_of_comments
+FROM fb_comments_count
+WHERE created_at >= '2019-12-01 00:00:00'
+AND created_at < '2020-02-01 00:00:00'),
+
+sum_comm AS (SELECT country,month,SUM(number_of_comments) AS total_comm
+FROM clear_list c
+INNER JOIN fb_active_users f
+ON f.user_id = c.user_id
+GROUP BY country,month),
+
+
+rn_list AS (SELECT country,month,
+DENSE_RANK()OVER(PARTITION BY month ORDER BY total_comm DESC) AS rn
+FROM sum_comm),
+
+compare_list AS (SELECT country,
+
+MAX(CASE
+WHEN month = '1' THEN rn 
+END) AS jan_rn ,
+
+MAX(CASE
+WHEN month = '12' THEN rn 
+END) AS dec_rn 
+
+FROM rn_list
+GROUP BY country)
+
+SELECT country
+FROM compare_list
+WHERE dec_rn > jan_rn
