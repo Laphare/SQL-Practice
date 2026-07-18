@@ -1,0 +1,12 @@
+WITH base_list AS (select user_id,EXTRACT(DAY FROM timestamp) AS DAY,
+MAX(CASE WHEN action = 'page_load' THEN timestamp END) AS load_time,
+MIN(CASE WHEN action = 'page_exit' THEN timestamp END) AS exit_time
+from facebook_web_log
+WHERE action = 'page_load' OR action = 'page_exit'
+GROUP BY user_id,EXTRACT(DAY FROM timestamp))
+
+SELECT user_id,
+AVG(exit_time - load_time) AS avg_session_duration
+FROM base_list
+WHERE exit_time > load_time
+GROUP BY user_id
