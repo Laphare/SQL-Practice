@@ -1,0 +1,17 @@
+WITH ranked_salary AS (
+    SELECT id, 
+           first_name, 
+           last_name, 
+           department_id, 
+           salary,
+           ROW_NUMBER() OVER(PARTITION BY id ORDER BY salary DESC) as rn
+    FROM ms_employee_salary
+)
+SELECT id, 
+       first_name, 
+       last_name, 
+       department_id, 
+       salary
+FROM ranked_salary
+WHERE rn = 1
+ORDER BY id ASC;
