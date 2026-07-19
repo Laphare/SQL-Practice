@@ -1,0 +1,19 @@
+WITH goup_same_day AS (select DISTINCT user_id,created_at
+from amazon_transactions),
+
+rn_list AS (
+SELECT user_id,created_at,
+ROW_NUMBER()OVER(PARTITION BY user_id ORDER BY created_at) AS rn
+FROM goup_same_day
+),
+
+base_list AS (SELECT user_id,
+MAX(CASE WHEN rn = 1 THEN created_at END) AS first_order,
+MAX(CASE WHEN rn = 2 THEN created_at END) AS second_order
+FROM rn_list
+GROUP BY user_id)
+
+SELECT user_id
+FROM base_list
+WHERE second_order - first_order <= 7
+AND second_order - first_order >= 1
