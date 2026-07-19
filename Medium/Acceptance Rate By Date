@@ -1,0 +1,10 @@
+WITH base_list AS (select user_id_sender,user_id_receiver,
+MIN(CASE WHEN action = 'sent' THEN date END) AS sent_date,
+MAX(CASE WHEN action = 'accepted' THEN date END) AS accepted_date
+from fb_friend_requests
+GROUP BY user_id_sender,user_id_receiver)
+
+SELECT sent_date AS date,
+SUM(CASE WHEN accepted_date IS NOT NULL THEN 1 ELSE 0 END)*1.0/COUNT(*) AS percentage_acceptance
+FROM base_list
+GROUP BY sent_date
