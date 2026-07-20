@@ -1,0 +1,15 @@
+WITH joined_list AS (
+select 
+
+w.worker_id,
+w.salary,
+t.worker_title,
+DENSE_RANK()OVER(ORDER BY w.salary DESC) AS rn
+
+FROM worker w
+INNER JOIN title t
+ON t.worker_ref_id = w. worker_id )
+
+SELECT worker_title AS best_paid_title
+FROM joined_list
+WHERE rn = 1
