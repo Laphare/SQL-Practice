@@ -1,0 +1,15 @@
+WITH sum_list AS (
+select 
+TO_CHAR(created_at, 'YYYY-MM') AS year_month,
+SUM(value) AS current_month_sale
+from sf_transactions
+GROUP BY TO_CHAR(created_at, 'YYYY-MM')
+),
+
+lag_sale AS (SELECT year_month, current_month_sale,
+LAG(current_month_sale)OVER(ORDER BY year_month) AS last_month_sale
+FROM sum_list)
+
+SELECT year_month , 
+(current_month_sale - last_month_sale )/last_month_sale*100 AS revenue_diff_pct
+FROM lag_sale
