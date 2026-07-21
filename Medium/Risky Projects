@@ -1,0 +1,19 @@
+WITH rate_list AS (select id,title, budget,(end_date-start_date)*1.0/365 AS rate
+from linkedin_projects),
+
+emp_list AS (select r.id,r.budget,r.title,r.rate,e.emp_id
+FROM rate_list r
+INNER JOIN linkedin_emp_projects e
+ON r.id = e.project_id),
+
+base_list AS (SELECT e.id,e.budget,e.title, CEIL(SUM(em.salary*e.rate)) AS prorated_employee_expense
+FROM emp_list e
+INNER JOIN linkedin_employees em
+ON em.id = e.emp_id
+GROUP BY e.id,e.budget,e.title
+)
+
+SELECT title,budget,prorated_employee_expense
+FROM base_list
+WHERE prorated_employee_expense > budget
+ORDER BY title
