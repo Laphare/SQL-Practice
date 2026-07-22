@@ -1,0 +1,7 @@
+WITH lag_list AS (select user_id,created_at,LAG(created_at)OVER(PARTITION BY user_id ORDER BY created_at) AS pre_day
+from amazon_transactions
+GROUP BY user_id,created_at)
+
+SELECT DISTINCT user_id
+FROM lag_list
+WHERE created_at - pre_day <=7
