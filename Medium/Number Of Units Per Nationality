@@ -1,0 +1,10 @@
+WITH age_list AS (select DISTINCT host_id,nationality
+from airbnb_hosts
+WHERE age < 30)
+
+SELECT age.nationality, count(DISTINCT unit_id) AS apartment_count
+FROM airbnb_units a 
+INNER JOIN age_list age
+ON age.host_id= a.host_id
+WHERE unit_type = 'Apartment'
+GROUP BY age.nationality
