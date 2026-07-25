@@ -1,0 +1,4 @@
+select SUM(CASE WHEN address IS NOT NULL THEN 1 ELSE 0 END)*100.0/COUNT(*) AS percent_shipable
+from orders o
+INNER JOIN customers c
+ON o.cust_id = c.id
