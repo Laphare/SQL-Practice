@@ -1,8 +1,0 @@
-select a.id AS employee_1, b.id AS employee_2
-from facebook_employees a
-LEFT JOIN facebook_employees b
-On a.id != b.id
-WHERE a.location = b.location
-AND a.age != b.age
-AND a.gender = b.gender
-AND a.is_senior != b.is_senior
