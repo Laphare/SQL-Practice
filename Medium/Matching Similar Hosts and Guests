@@ -1,0 +1,12 @@
+WITH d_list_hosts AS (select DISTINCT * 
+from airbnb_hosts),
+
+d_list_guests AS (select DISTINCT * 
+from airbnb_guests)
+
+SELECT h.host_id, g.guest_id
+FROM d_list_hosts h
+INNER JOIN d_list_guests g
+ON h.nationality =g.nationality AND h.gender = g.gender
+
+ORDER BY host_id
