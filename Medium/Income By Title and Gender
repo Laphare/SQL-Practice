@@ -1,0 +1,9 @@
+WITH total_b_list AS (select worker_ref_id, sum(bonus) AS total_bouns
+FROM sf_bonus
+GROUP BY worker_ref_id)
+
+SELECT s.employee_title,s.sex,AVG(s.salary+t.total_bouns) AS avg_compensation
+FROM sf_employee s
+INNER JOIN total_b_list t
+ON s.id = t.worker_ref_id
+GROUP BY s.sex,s.employee_title
