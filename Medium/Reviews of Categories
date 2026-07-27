@@ -1,0 +1,5 @@
+SELECT category,SUM(review_count) AS review_cnt
+FROM (select review_count, unnest(string_to_array(categories, ';')) AS category
+from yelp_business)
+GROUP BY category
+ORDER BY review_cnt DESC
