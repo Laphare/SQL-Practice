@@ -1,0 +1,7 @@
+WITH re_list AS (select business_name,cool,review_text,
+DENSE_RANK()OVER(ORDER BY cool DESC) AS rn
+from yelp_reviews)
+
+SELECT business_name,review_text
+FROM re_list
+WHERE rn = 1
