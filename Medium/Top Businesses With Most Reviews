@@ -1,0 +1,10 @@
+WITH drop_dupl AS (
+select  name, SUM(review_count) AS review_count
+from yelp_business
+GROUP BY name),
+rn_list AS (
+SELECT name,review_count,RANK()OVER(ORDER BY review_count DESC) AS rn
+FROM drop_dupl)
+SELECT name,review_count
+FROM rn_list
+WHERE rn<=5
