@@ -1,0 +1,3 @@
+select hour
+from lyft_rides
+WHERE gasoline_cost in (SELECT MAX(gasoline_cost) FROM lyft_rides)
