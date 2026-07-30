@@ -1,0 +1,5 @@
+select name 
+from olympics_athletes_events
+WHERE 
+medal IN ('Bronze','Silver')
+AND age > 40
