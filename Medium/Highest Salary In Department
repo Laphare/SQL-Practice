@@ -1,0 +1,7 @@
+WITH rn_list AS (select 
+department,first_name,salary,DENSE_RANK()OVER(PARTITION BY department ORDER BY salary DESC) AS rn
+from employee)
+
+SELECT department,first_name,salary
+FROM rn_list
+WHERE rn = 1
