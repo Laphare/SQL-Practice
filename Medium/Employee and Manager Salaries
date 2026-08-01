@@ -1,8 +1,5 @@
-WITH total_earning AS (select id,first_name,salary,manager_id
-from employee)
-
-SELECT e.first_name,e.salary
-FROM total_earning e
-INNER JOIN total_earning m
+SELECT e.first_name, e.salary
+FROM employee e
+JOIN employee m
 ON e.manager_id = m.id
-WHERE e.salary>m.salary
+WHERE e.salary > m.salary;
