@@ -1,0 +1,5 @@
+select DISTINCT salary
+from employee
+order by salary DESC
+
+LIMIT 1 OFFSET 1
