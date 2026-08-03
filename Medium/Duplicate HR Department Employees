@@ -1,0 +1,9 @@
+select first_name,department
+from worker
+WHERE department = 'HR'
+
+UNION ALL
+
+select first_name,department
+from worker
+WHERE department = 'HR'
