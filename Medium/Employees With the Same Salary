@@ -1,0 +1,6 @@
+select w1.worker_id, w1.first_name,w1.salary
+from worker w1
+INNER JOIN worker w2
+ON w1.salary = w2.salary
+AND w1.worker_id != w2.worker_id
+ORDER BY w1.salary DESC
