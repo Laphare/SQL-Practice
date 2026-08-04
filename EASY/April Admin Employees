@@ -1,0 +1,4 @@
+select COUNT(*) As n_admins
+from worker
+WHERE department = 'Admin'
+AND extract(MONTH from joining_date) >=4
