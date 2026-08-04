@@ -1,0 +1,12 @@
+with word_list AS (
+select regexp_split_to_table(LOWER(contents),'[^a-zA-Z0-9]+') AS word
+
+from google_file_store
+)
+
+SELECT word, 
+COUNT(*) AS occurrences
+FROM word_list
+WHERE word != ''
+GROUP BY word
+ORDER BY occurrences DESC
