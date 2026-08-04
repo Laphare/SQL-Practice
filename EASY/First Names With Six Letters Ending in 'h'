@@ -1,0 +1,5 @@
+select * 
+from worker
+WHERE 
+LENGTH (first_name) = 6
+AND first_name ILIKE '%h'
