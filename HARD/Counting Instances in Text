@@ -1,0 +1,7 @@
+WITH words_list AS (select regexp_split_to_table( LOWER(contents),'[^a-zA-Z0-9]+') AS word
+from google_file_store)
+
+SELECT word, COUNT(*) AS nentry
+FROM words_list
+WHERE word in ('bull','bear')
+GROUP BY word
