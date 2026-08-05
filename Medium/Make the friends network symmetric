@@ -1,0 +1,8 @@
+select friend_id AS user_id, user_id AS friend_id
+from google_friends_network
+
+
+UNION 
+
+select *
+from google_friends_network
