@@ -1,0 +1,4 @@
+select * 
+from google_file_store
+WHERE LOWER(contents) LIKE '%%optimism%%'
+AND LOWER(filename) LIKE 'draft%'
