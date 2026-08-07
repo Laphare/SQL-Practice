@@ -1,0 +1,10 @@
+WITH DISTINCT_list AS (select company,continent,SUM(profits) AS profits
+from forbes_global_2010_2014
+GROUP BY company,continent),
+rn_list AS (
+SELECT company, continent,
+DENSE_RANK()OVER(ORDER BY profits DESC) AS rn
+FROM DISTINCT_list)
+SELECT company,continent
+FROM rn_list
+WHERE rn = 1
