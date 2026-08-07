@@ -1,0 +1,6 @@
+def score_matrix(matrix):
+    total_sum = 0
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            total_sum += (-1)**(i+j)*matrix[i][j]
+    return total_sum
