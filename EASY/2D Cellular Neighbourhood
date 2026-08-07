@@ -1,0 +1,30 @@
+def get_neighbourhood(n_type, mat, coordinates):
+    x = []
+    if not mat or not mat[0]:
+        return x
+        
+    r, c = coordinates[0], coordinates[1]
+    rows = len(mat)
+    cols = len(mat[0])
+
+
+    if not (0 <= r < rows and 0 <= c < cols):
+        return []
+
+    if n_type == "moore":
+        for i in range(r - 1, r + 2):
+            for j in range(c - 1, c + 2):
+                if i == r and j == c:
+                    continue
+                if 0 <= i < rows and 0 <= j < cols:
+                    x.append(mat[i][j])
+
+    elif n_type == "von_neumann":
+
+        direct = [(-1, 0), (0, -1), (0, 1), (1, 0)]
+        for dr, dc in direct:
+            rr, rc = r + dr, c + dc
+            if 0 <= rr < rows and 0 <= rc < cols:
+                x.append(mat[rr][rc])
+
+    return x
