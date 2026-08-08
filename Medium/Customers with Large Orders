@@ -1,0 +1,9 @@
+WITH distinct_list AS (select DISTINCT customer_id
+from online_store_orders
+WHERE amount >100)
+
+
+SELECT d.customer_id,c.customer_name
+FROM distinct_list d
+INNER JOIN online_store_customers c
+ON c.customer_id = d.customer_id
